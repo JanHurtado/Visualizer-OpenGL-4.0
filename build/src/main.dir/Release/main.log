@@ -1,0 +1,35 @@
+﻿Build started 11/05/2017 15:34:51.
+     1>Project "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\build\src\main.vcxproj" on node 2 (Rebuild target(s)).
+     1>CustomBuild:
+         Building Custom Rule C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/CMakeLists.txt
+         CMake does not need to re-run because C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/src/CMakeFiles/generate.stamp is up-to-date.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\build\src" /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src" /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\..\dependencies\Qt\include" /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\..\dependencies\glew\include" /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\..\dependencies\glm" /I"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\..\dependencies\OpenMesh\include" /nologo /W3 /WX- /O2 /Ob2 /D WIN32 /D _WINDOWS /D NDEBUG /D _USE_MATH_DEFINES /D "CMAKE_INTDIR=\"Release\"" /D _MBCS /Gm- /EHsc /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /GR /Fo"main.dir\Release\\" /Fd"main.dir\Release\vc120.pdb" /Gd /TP /errorReport:prompt "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\main.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\mesh\denoising.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\mesh\iomesh.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\mesh\neighborhood.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\mesh\util.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\myGLWindow.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\visualization\myCamera.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\visualization\myRenderer.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\visualization\myShader.cpp" "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\src\visualization\myShape.cpp"
+         main.cpp
+         denoising.cpp
+         iomesh.cpp
+         neighborhood.cpp
+         util.cpp
+         myGLWindow.cpp
+         myCamera.cpp
+         myRenderer.cpp
+         myShader.cpp
+         myShape.cpp
+         Generating Code...
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\build\src\Release\main.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/Qt/lib" /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/Qt/lib/Release" /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/glew/lib" /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/glew/lib/Release" /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/OpenMesh/lib" /LIBPATH:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/src/../dependencies/OpenMesh/lib/Release" kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib opengl32.lib Qt5Core.lib Qt5Gui.lib Qt5OpenGl.lib Qt5Widgets.lib OpenMeshCore.lib glew32.lib glew32s.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/src/Release/main.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/src/Release/main.lib" /MACHINE:X64   /machine:x64 main.dir\Release\main.obj
+         main.dir\Release\denoising.obj
+         main.dir\Release\iomesh.obj
+         main.dir\Release\neighborhood.obj
+         main.dir\Release\util.obj
+         main.dir\Release\myGLWindow.obj
+         main.dir\Release\myCamera.obj
+         main.dir\Release\myRenderer.obj
+         main.dir\Release\myShader.obj
+         main.dir\Release\myShape.obj
+         main.vcxproj -> C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\build\src\Release\main.exe
+     1>Done Building Project "C:\Users\hurtado\Documents\myprojects\Visualizer-OpenGL-4.0\build\src\main.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:12.24
