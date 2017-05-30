@@ -1,4 +1,0 @@
-C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/CMakeFiles/ZERO_CHECK.dir
-C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/src/CMakeFiles/main.dir
-C:/Users/hurtado/Documents/myprojects/Visualizer-OpenGL-4.0/build/src/CMakeFiles/ALL_BUILD.dir

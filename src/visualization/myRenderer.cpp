@@ -2,6 +2,7 @@
 
 ///////////////////////COMMON///////////////////////// (begin)
 
+
 bool checkStatus(GLuint objectID, PFNGLGETSHADERIVPROC objectPropertyGetterFunc, PFNGLGETSHADERINFOLOGPROC getInfoLogFunc, GLenum statusType)
 {
 	GLint status;
@@ -164,7 +165,7 @@ bool myRenderer::installShaders()
 
 void myRenderer::sendDataSingleBuffer()
 {
-	const uint NUM_FLOATS_PER_VERTICE = 9;
+	const uint NUM_FLOATS_PER_VERTICE = 11;
 	const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
 	GLsizeiptr totalVertexBufferSize = 0;
@@ -206,10 +207,12 @@ void myRenderer::sendDataSingleBuffer()
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i]));
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 3));
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 6));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 9));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferID);
 	}
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferID);
@@ -225,6 +228,8 @@ void myRenderer::initialize()
 	sendDataSingleBuffer();
 	installShaders();
 	initializeInteractor();
+	setTexturesAndSamplers();
+	printf("OpenGL version supported by this platform (%s): \n", glGetString(GL_VERSION));
 }
 
 void myRenderer::initializeInteractor()
@@ -250,7 +255,7 @@ void myRenderer::setDefaultValues()
 
 void myRenderer::resendDataSingleBuffer()
 {
-	const uint NUM_FLOATS_PER_VERTICE = 9;
+	const uint NUM_FLOATS_PER_VERTICE = 11;
 	const uint VERTEX_BYTE_SIZE = NUM_FLOATS_PER_VERTICE * sizeof(float);
 
 	GLsizeiptr totalVertexBufferSize = 0;
@@ -293,17 +298,18 @@ void myRenderer::resendDataSingleBuffer()
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(3);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i]));
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 3));
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 6));
+		glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, VERTEX_BYTE_SIZE, (void*)(m_vertexOffsets[i] + sizeof(float)* 9));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elementBufferID);
 	}
 }
 
 void myRenderer::draw()
 {
-
 	glViewport(0, 0, m_width, m_height);
 	//glClearColor(0, 0, 0, 1);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -322,6 +328,8 @@ void myRenderer::draw()
 	GLuint lightPositionUniformLocation;
 	GLuint cameraPositionUniformLocation;
 	GLuint aditionalPropertiesUniformLocation;
+	GLuint textureSamplerLocation;
+	GLuint bumpMapSamplerLocation;
 
 	fullTransformationUniformLocation = glGetUniformLocation(m_programID, "modelToProjectionMatrix");
 	modelToWorldMatrixUniformLocation = glGetUniformLocation(m_programID, "modelToWorldMatrix");
@@ -329,6 +337,8 @@ void myRenderer::draw()
 	lightPositionUniformLocation = glGetUniformLocation(m_programID, "lightPositionVector");
 	cameraPositionUniformLocation = glGetUniformLocation(m_programID, "cameraPositionVector");
 	aditionalPropertiesUniformLocation = glGetUniformLocation(m_programID, "aditionalProperties");
+	textureSamplerLocation = glGetUniformLocation(m_programID, "mainTexture");
+	bumpMapSamplerLocation = glGetUniformLocation(m_programID, "mainBumpMap");
 
 	modelToProjectionMatrix = worldToProjectionMatrix * modelToWorldMatrix;
 
@@ -338,6 +348,23 @@ void myRenderer::draw()
 	glUniform3fv(lightPositionUniformLocation, 1, &lightPosition[0]);
 	glUniform3fv(cameraPositionUniformLocation, 1, &(camera.getPosition())[0]);
 	glUniform3fv(aditionalPropertiesUniformLocation, 1, &aditionalProperties[0]);
+
+	glUseProgram(m_programID);
+	glUniform1i(textureSamplerLocation, 0);
+	glUniform1i(bumpMapSamplerLocation, 2);
+
+	glActiveTexture(GL_TEXTURE0 + 0);
+	glBindTexture(GL_TEXTURE_2D, _texture);
+	glBindSampler(0, _textureSampler);
+	glActiveTexture(GL_TEXTURE0 + 2);
+	glBindTexture(GL_TEXTURE_2D, _bumpMap);
+	glBindSampler(2, _bumpMapSampler);
+
+	/*glBindSampler(0, _textureSampler);
+	glBindTextureUnit(0, _texture);
+
+	glBindSampler(1, _bumpMapSampler);
+	glBindTextureUnit(1, _bumpMap);*/
 
 	for (size_t i = 0; i < m_shapes.size(); i++)
 	{
@@ -369,8 +396,8 @@ void myRenderer::draw()
 
 void myRenderer::updateVertexBuffer(size_t index)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexBufferID);
-	glBufferSubData(GL_ARRAY_BUFFER, m_vertexOffsets[index], m_shapes[index]->vertexBufferSize(), m_shapes[index]->vertices);
+	glBindBuffer(55, m_vertexBufferID);
+	glBufferSubData(55, m_vertexOffsets[index], m_shapes[index]->vertexBufferSize(), m_shapes[index]->vertices);
 }
 
 void myRenderer::computeCentralPoint()
@@ -477,4 +504,177 @@ glm::vec3 myRenderer::getRayDirection(glm::vec2 & pos)
 	// don't forget to normalise the vector at some point
 	ray_wor = glm::normalize(ray_wor);
 	return ray_wor;
+}
+
+void myRenderer::setTexturesAndSamplers()
+{
+	// ------------------------------------------------------------------------
+	// 6- Create texture
+	// ------------------------------------------------------------------------
+	CImg<unsigned char> image("lambertian.jpg");
+
+	GLsizei width = image.width();
+	GLsizei height = image.height();
+	GLsizei numLevels = 1 + std::floor(std::log2(std::max(width, height)));
+
+	GLubyte * texels = new GLubyte[width*height*4];
+
+	int pos = 0;
+	for (int r = height-1; r >=0; r--)
+	{
+		for (int c = 0; c < width; c++)
+		{
+		
+			texels[pos] = (int)image(c, r, 0, 0);
+			pos++;
+			texels[pos] = (int)image(c, r, 0, 1);
+			pos++;
+			texels[pos] = (int)image(c, r, 0, 2);
+			pos++;
+			texels[pos] = 255;
+			pos++;
+		}
+
+	}
+		
+
+	/*GLubyte texels[4 * 4 * 4] = // 4 rows x 4 columns x 4 coords per texel
+	{
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+		255, 255, 255, 255,
+		0, 0, 0, 255,
+	};
+	GLsizei width = 4;
+	GLsizei height = 4;
+	GLsizei numLevels = 1 + std::floor(std::log2(std::max(width, height)));*/
+
+	// create texture object
+	glCreateTextures(GL_TEXTURE_2D, 1, &_texture);
+
+	// allocate immutable memory (including mipmaps)
+	glTextureStorage2D(_texture, numLevels, GL_RGBA8, width, height);
+
+	// transfer data to GPU
+	glTextureSubImage2D(_texture, 0, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, texels); // level = 0, xoffset = 0, yoffset = 0
+
+	// generate the mipmaps
+	glGenerateTextureMipmap(_texture);
+
+	// ------------------------------------------------------------------------
+	// 7- Create sampler to configure how texture will be read inside shader
+	// ------------------------------------------------------------------------
+
+	glCreateSamplers(1, &_textureSampler);
+	glSamplerParameteri(_textureSampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glSamplerParameteri(_textureSampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// sharp texture
+	//		glSamplerParameteri(_textureSampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//		glSamplerParameteri(_textureSampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// blurred texture
+	glSamplerParameteri(_textureSampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glSamplerParameteri(_textureSampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// improve blur quality by enabling anysotropic filtering
+	GLint maxAnisotropy = 0;
+	glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+	glSamplerParameteri(_textureSampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+
+	delete [] texels;
+
+
+
+
+
+
+
+	CImg<unsigned char> bumpMapimage("bumpn.png");
+
+	GLsizei bumpMapwidth = bumpMapimage.width();
+	GLsizei bumpMapheight = bumpMapimage.height();
+	GLsizei bumpMapnumLevels = 1 + std::floor(std::log2(std::max(bumpMapwidth, bumpMapheight)));
+
+	GLubyte * bumpMaptexels = new GLubyte[bumpMapwidth*bumpMapheight * 4];
+
+	int bumpMappos = 0;
+	for (int r = bumpMapheight - 1; r >= 0; r--)
+	{
+		for (int c = 0; c < bumpMapwidth; c++)
+		{
+			bumpMaptexels[bumpMappos] = (int)bumpMapimage(c, r, 0, 0);
+			bumpMappos++;
+			bumpMaptexels[bumpMappos] = (int)bumpMapimage(c, r, 0, 1);
+			bumpMappos++;
+			bumpMaptexels[bumpMappos] = (int)bumpMapimage(c, r, 0, 2);
+			bumpMappos++;
+			bumpMaptexels[bumpMappos] = 255;
+			bumpMappos++;
+		}
+
+	}
+
+	// create texture object
+	glCreateTextures(GL_TEXTURE_2D, 1, &_bumpMap);
+
+	// allocate immutable memory (including mipmaps)
+	glTextureStorage2D(_bumpMap, bumpMapnumLevels, GL_RGBA8, bumpMapwidth, bumpMapheight);
+
+	// transfer data to GPU
+	glTextureSubImage2D(_bumpMap, 0, 0, 0, bumpMapwidth, bumpMapheight, GL_RGBA, GL_UNSIGNED_BYTE, bumpMaptexels); // level = 0, xoffset = 0, yoffset = 0
+
+	// generate the mipmaps
+	glGenerateTextureMipmap(_bumpMap);
+
+	// ------------------------------------------------------------------------
+	// 7- Create sampler to configure how texture will be read inside shader
+	// ------------------------------------------------------------------------
+
+	glCreateSamplers(1, &_bumpMapSampler);
+	glSamplerParameteri(_bumpMapSampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glSamplerParameteri(_bumpMapSampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// sharp texture
+	//		glSamplerParameteri(_textureSampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//		glSamplerParameteri(_textureSampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	// blurred texture
+	glSamplerParameteri(_bumpMapSampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glSamplerParameteri(_bumpMapSampler, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	// improve blur quality by enabling anysotropic filtering
+	GLint bumpMapmaxAnisotropy = 0;
+	glGetIntegerv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &bumpMapmaxAnisotropy);
+	glSamplerParameteri(_bumpMapSampler, GL_TEXTURE_MAX_ANISOTROPY_EXT, bumpMapmaxAnisotropy);
+
+	delete[] bumpMaptexels;
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

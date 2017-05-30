@@ -28,6 +28,8 @@ struct Vertex
      * @brief normal - vertex normal (nx,ny,nz)
      */
 	glm::vec3 normal;
+
+	glm::vec2 texCoord2D;
 };
 
 /**
@@ -102,11 +104,17 @@ struct ShapeData
 			TriMesh::Color current_color = _mesh.color(*v_it);
 			TriMesh::Point current_point = _mesh.point(*v_it);
 			TriMesh::Normal current_normal = _mesh.normal(*v_it);
+			TriMesh::TexCoord2D current_texCoord(0.0f,0.0f);
+			if (_mesh.has_vertex_texcoords2D())
+			{
+				current_texCoord = _mesh.texcoord2D(*v_it);
+			}
 			c += current_point;
 			n++;
 			vertices[currentIndex].position = glm::vec3(current_point[0], current_point[1], current_point[2]);
 			vertices[currentIndex].color = glm::vec3(0.5f, 0.5f, 0.5f);
 			vertices[currentIndex].normal = glm::vec3(current_normal[0], current_normal[1], current_normal[2]);
+			vertices[currentIndex].texCoord2D = glm::vec2(current_texCoord[0], current_texCoord[1]);
 			currentIndex++;
 		}
 		c = c / n;

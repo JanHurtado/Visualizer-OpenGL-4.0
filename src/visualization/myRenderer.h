@@ -12,6 +12,9 @@
 #include "myShape.h"
 #include "myCamera.h"
 
+#include "CImg.h"
+using namespace cimg_library;
+
 /** @addtogroup visualization
   * @brief Renderer.
   *
@@ -208,6 +211,8 @@ public:
     void setSceneCentralPoint(glm::vec3 & _point){sceneCentralPoint = _point;}
     void setBoundingSphereRadius(float _radius){boundingSphereRadius = _radius;}
 
+	void setTexturesAndSamplers();
+
 private:
 
     /////////////////////////////////////////////////
@@ -306,6 +311,13 @@ private:
      * @brief m_draw_modes - vector containing all shape rendering modes
      */
     vector<myDrawFlags> m_draw_modes;
+
+	GLuint _texture;
+	GLuint _textureSampler;
+
+	GLuint _bumpMap;
+	GLuint _bumpMapSampler;
+
 };
 
 /** @} */

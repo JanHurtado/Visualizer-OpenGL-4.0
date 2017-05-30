@@ -60,6 +60,8 @@ protected:
      * @return success
      */
 	bool event(QEvent *event);
+
+	void keyPressEvent(QKeyEvent*);
 public:
     /**
      * @brief myGLWindow - default constructor

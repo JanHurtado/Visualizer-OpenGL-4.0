@@ -18,12 +18,10 @@ int main(int argc, char **argv)
 {
 	QApplication app(argc, argv);
 	ShapeData sd;
-	sd.loadFromFile("test.off");
+	sd.loadFromFile(argv[1]);
 	myGLWindow gl_window;
 	gl_window.show();
 	gl_window.setShape(&sd);
-	/*myGLWindow myWindow;
-	myWindow.show();*/
-	printf("OpenGL version supported by this platform (%s): \n",glGetString(GL_VERSION));
+
 	return app.exec();
 }

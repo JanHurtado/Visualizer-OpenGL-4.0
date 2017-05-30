@@ -23,8 +23,8 @@ void myGLWindow::initializeGL()
 {
 	renderer = new myRenderer;
 	setMouseTracking(true);
-	renderer->addShader(GL_VERTEX_SHADER, "VertexShaderCodePhong.glsl");
-	renderer->addShader(GL_FRAGMENT_SHADER, "FragmentShaderCodePhong.glsl");
+	renderer->addShader(GL_VERTEX_SHADER, "VertexShaderCode.glsl");
+	renderer->addShader(GL_FRAGMENT_SHADER, "FragmentShaderCode.glsl");
 	renderer->initialize();
 }
 
@@ -37,6 +37,7 @@ void myGLWindow::paintGL()
 	else {
 		QString msg = "FPS: " + QString::number(m_time.elapsed() / float(m_frameCount));
 		setWindowTitle(msg);
+		//update();
 	}
 	m_frameCount++;
 
@@ -64,6 +65,22 @@ bool myGLWindow::event(QEvent *event)
 		return true;
 	}
 	return QOpenGLWidget::event(event);
+}
+
+void myGLWindow::keyPressEvent(QKeyEvent* e)
+{
+	switch (e->key())
+	{
+	case Qt::Key::Key_A:
+		setVisualizationMode(0);
+		break;
+	case Qt::Key::Key_S:
+		setVisualizationMode(1);
+		break;
+	case Qt::Key::Key_D:
+		setVisualizationMode(2);
+		break;
+	}
 }
 
 void myGLWindow::setVisualizationMode(int mode)

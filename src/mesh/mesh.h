@@ -25,7 +25,7 @@ struct MyTraits : OpenMesh::DefaultTraits
   typedef OpenMesh::Vec3f Normal;
 
   // The default 1D texture coordinate type is float.
-  typedef double  TexCoord1D;
+  typedef float  TexCoord1D;
   // The default 2D texture coordinate type is OpenMesh::Vec2f.
   typedef OpenMesh::Vec2f  TexCoord2D;
   // The default 3D texture coordinate type is OpenMesh::Vec3f.
